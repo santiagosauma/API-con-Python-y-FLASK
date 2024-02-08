@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Items App</title>
+</head>
+<body>
+    <h1>Items App</h1>
+
+    <input id = "item" placeholder = "Item Name" />
+    <button id = "add_item">Add</button>
+
+    <div class="data">
+        No items found!
+    </div>
+
+    <script>
+        const dataElement = document.querySelector('.data');
+        const itemInput = document.querySelector('#item');
+        const addItemBtn = document.querySelector('#add_item');
+
+    addItemBtn.addEventListener("click", function(){
+        let itemName = itemInput.value;
+        fetch('http://127.0.0.1:5000/items',
+        {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({name: itemName})
+        }).then(response => response.json())
+        .then(data => console.log(data))
+    });
+
+
+
+        fetch('http://127.0.0.1:5000/items')
+            .then(response => response.json())
+            .then(data => handler(data))
+
+        function handler(data) {
+            if(data.length == 0) {
+                dataElement.innerHTML = 'No items found!';
+                return;
+            } else {
+                dataElement.innerHTML = '';
+            }
+
+            dataElement.innerHTML = '';
+            data.forEach(element => {
+                let p = document.createElement('p');
+                p.innerHTML = `${element.Nombre}`;
+                dataElement.appendChild(p);
+            });
+        }
+    </script>
+</body>
+</html>
